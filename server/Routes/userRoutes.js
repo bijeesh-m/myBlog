@@ -1,16 +1,11 @@
-
 const express = require("express");
-const User = require("../models/User");
+const userController = require("../controllers/userController");
 const { protect } = require("../middlewares/authMiddleware");
-const router = express.Router()
+const router = express.Router();
 
-router.get("/users", protect, async(req,res)=>{
-    try{
-      const users = await User.find()
-      res.status(200).json({message:"Success", users})
-    }catch(error){
-     res.status(500).json({message:false , error})
-    }
-})
+router.get("/users", protect, userController.getAllUsers)
+router.get("/users/my-blogs", protect, userController.getMyBlogs)
+router.get("/users/:id/profile", userController.getProfile)
+router.put("/users/profile", protect, userController.updateProfile)
 
 module.exports = router;

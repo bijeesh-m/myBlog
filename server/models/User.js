@@ -2,11 +2,15 @@ const mongoose = require("mongoose")
 const bcrypt = require("bcryptjs")
 
 const userSchema = new mongoose.Schema({
-    username: { type: String, required: true },
-    email: { type: String, required: true },
+    username: { type: String, required: true, unique: true, trim: true },
+    email: { type: String, required: true, unique: true, trim: true, lowercase: true },
     password: { type: String, required: true },
-    age: { type: Number, required: true }
-})
+    bio: { type: String, default: "" },
+    avatar: { type: String, default: "" },
+    website: { type: String, default: "" },
+    followers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    following: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+}, { timestamps: true })
 
 
 userSchema.pre('save', async function () {
@@ -21,5 +25,3 @@ userSchema.methods.matchPassword = async function (enteredPassword) {
 
 
 module.exports = mongoose.model('User', userSchema);
-
-

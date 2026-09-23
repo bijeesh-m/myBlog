@@ -1,29 +1,37 @@
 const express = require("express");
 const cors = require("cors");
-const userRoutes = require("./Routes/userRoutes")
-const authRoutes = require("./Routes/authRoutes")
-const blogRoutes = require("./Routes/blogRoutes")
-const cookieParser = require("cookie-parser")
+const cookieParser = require("cookie-parser");
 const dns = require("dns");
 const connectDB = require("./config/db");
 
+const authRoutes = require("./Routes/authRoutes");
+const userRoutes = require("./Routes/userRoutes");
+const blogRoutes = require("./Routes/blogRoutes");
+
 const app = express();
 
-require("dotenv").config()
+require("dotenv").config();
 
-dns.setServers(["8.8.8.8"])
+dns.setServers(["8.8.8.8"]);
 
-connectDB()
+connectDB();
 
-app.use(express.json())
-app.use(cookieParser())
-app.use(cors({ origin: "http://localhost:5173", credentials: true }))
+app.use(express.json({ limit: "10mb" }));
+app.use(cookieParser());
+app.use(cors({
+    origin: "http://localhost:5173",
+    credentials: true
+}));
 
-app.use(authRoutes)
-app.use(userRoutes)
-app.use("/api", blogRoutes)
+app.use(authRoutes);
+app.use("/api", userRoutes);
+app.use("/api", blogRoutes);
 
+// Health check
+app.get("/api/health", (req, res) => {
+    res.status(200).json({ success: true, message: "Server is running" });
+});
 
 app.listen(5000, () => {
-    console.log("server is running");
-})
+    console.log("Server is running on port 5000");
+});
