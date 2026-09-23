@@ -1,9 +1,4 @@
-
-
 const mongoose = require("mongoose");
-
-
-
 const blogSchema = new mongoose.Schema(
     {
         title: {
@@ -33,7 +28,5 @@ const blogSchema = new mongoose.Schema(
         timestamps: true
     }
 )
-
-
 const Blog = mongoose.model("blogs", blogSchema);
 module.exports = Blog
